@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import dateutil.parser
+from dateutil import tz
 import defaults
 import hashlib
 import json
@@ -9,6 +10,7 @@ import os.path
 import pylast
 import requests
 import sseclient
+import time
 
 
 class Config(dict):
@@ -85,4 +87,9 @@ for msg in messages:
 
         update_stream(track)
         update_tunein(track)
-        update_lastfm(track, played)
+        update_lastfm(
+            track,
+            int(time.mktime(played.astimezone(tz.tzlocal()).timetuple())))
+    elif data['event'] == 'track_edit':
+        track = data['tracklog']['track']
+        update_stream(track)
