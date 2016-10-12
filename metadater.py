@@ -5,7 +5,7 @@ import defaults
 import hashlib
 import json
 import logging
-import os
+import os.path
 import pylast
 import requests
 import sseclient
@@ -68,7 +68,7 @@ def update_lastfm(track, timestamp):
 config = Config()
 config.load_from_object(defaults)
 
-if os.path.exists(os.environ.get('APP_CONFIG_PATH', 'config.py')):
+if os.path.exists('config.py'):
     import config as _configobj
     config.load_from_object(_configobj)
 
