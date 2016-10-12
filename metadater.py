@@ -89,7 +89,8 @@ for msg in messages:
         update_tunein(track)
         update_lastfm(
             track,
-            int(time.mktime(played.astimezone(tz.tzlocal()).timetuple())))
+            int(time.mktime(played.replace(tzinfo=tz.tzutc()).
+                            astimezone(tz.tzlocal()).timetuple())))
     elif data['event'] == 'track_edit':
         track = data['tracklog']['track']
         update_stream(track)
