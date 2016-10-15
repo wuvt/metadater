@@ -28,7 +28,7 @@ def update_stream(track):
             'album': track['album'],
             'artist': track['artist'],
             'title': track['title'],
-        })
+        }, timeout=config['REQUEST_TIMEOUT'])
         if r.status_code != 200:
             logger.warning("Update stream mount {0} failed: {1}".format(
                 mount, r.status_code))
@@ -42,7 +42,7 @@ def update_tunein(track):
             'id': config['TUNEIN_STATIONID'],
             'title': track['title'],
             'artist': track['artist'],
-        })
+        }, timeout=config['REQUEST_TIMEOUT'])
         if r.status_code != 200:
             logger.warning("Update TuneIn failed: {0}".format(r.status_code))
 
