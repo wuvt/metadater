@@ -19,6 +19,10 @@ class Config(dict):
             if key.isupper():
                 self[key] = getattr(obj, key)
 
+    def load_from_json(self, path):
+        with open(path) as f:
+            self.update(json.load(f))
+
 
 def update_stream(track):
     for mount in config['ICECAST_MOUNTS']:
@@ -67,12 +71,17 @@ def update_lastfm(track, timestamp):
         except Exception as exc:
             logger.warning("Last.fm scrobble failed: {}".format(exc))
 
+
 config = Config()
 config.load_from_object(defaults)
 
-if os.path.exists('config.py'):
-    import config as _configobj
-    config.load_from_object(_configobj)
+config_path = os.environ.get('APP_CONFIG_PATH', 'config.py')
+if os.path.exists(config_path):
+    if config_path.endswith('.py'):
+        import config as _configobj
+        config.load_from_object(_configobj)
+    else:
+        config.load_from_json(config_path)
 
 logger = logging.getLogger(__name__)
 
