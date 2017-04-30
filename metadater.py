@@ -72,34 +72,39 @@ def update_lastfm(track, timestamp):
             logger.warning("Last.fm scrobble failed: {}".format(exc))
 
 
-config = Config()
-config.load_from_object(defaults)
+if __name__ == '__main__':
+    config = Config()
+    config.load_from_object(defaults)
 
-config_path = os.environ.get('APP_CONFIG_PATH', 'config.py')
-if os.path.exists(config_path):
-    if config_path.endswith('.py'):
-        import config as _configobj
-        config.load_from_object(_configobj)
-    else:
-        config.load_from_json(config_path)
+    config_path = os.environ.get('APP_CONFIG_PATH', 'config.py')
+    if os.path.exists(config_path):
+        if config_path.endswith('.py'):
+            import config as _configobj
+            config.load_from_object(_configobj)
+        else:
+            config.load_from_json(config_path)
 
-logger = logging.getLogger(__name__)
+    logger = logging.getLogger(__name__)
 
-messages = sseclient.SSEClient(config['LIVE_URL'])
-for msg in messages:
-    data = json.loads(msg.data)
-    if data['event'] == 'track_change':
-        track = data['tracklog']['track']
-        played = dateutil.parser.parse(data['tracklog']['played'])
-        logger.info("{track} played at {played}".format(track=track,
-                                                        played=played))
+    messages = sseclient.SSEClient(config['LIVE_URL'])
+    for msg in messages:
+        try:
+            data = json.loads(msg.data)
+            if data['event'] == 'track_change':
+                track = data['tracklog']['track']
+                played = dateutil.parser.parse(data['tracklog']['played'])
+                logger.info("{track} played at {played}".format(track=track,
+                                                                played=played))
 
-        update_stream(track)
-        update_tunein(track)
-        update_lastfm(
-            track,
-            int(time.mktime(played.replace(tzinfo=tz.tzutc()).
-                            astimezone(tz.tzlocal()).timetuple())))
-    elif data['event'] == 'track_edit':
-        track = data['tracklog']['track']
-        update_stream(track)
+                update_stream(track)
+                update_tunein(track)
+                update_lastfm(
+                    track,
+                    int(time.mktime(played.replace(tzinfo=tz.tzutc()).
+                                    astimezone(tz.tzlocal()).timetuple())))
+            elif data['event'] == 'track_edit':
+                track = data['tracklog']['track']
+                update_stream(track)
+
+        except Exception as e:
+            logger.warning("Failed to process message: {}".format(e))
