@@ -40,15 +40,17 @@ def update_stream(track):
 
 def update_tunein(track):
     if len(config['TUNEIN_PARTNERID']) > 0:
-        r = requests.get('http://air.radiotime.com/Playing.ashx', params={
-            'partnerId': config['TUNEIN_PARTNERID'],
-            'partnerKey': config['TUNEIN_PARTNERKEY'],
-            'id': config['TUNEIN_STATIONID'],
-            'title': track['title'],
-            'artist': track['artist'],
-        }, timeout=config['REQUEST_TIMEOUT'])
-        if r.status_code != 200:
-            logger.warning("Update TuneIn failed: {0}".format(r.status_code))
+        try:
+            r = requests.get('http://air.radiotime.com/Playing.ashx', params={
+                'partnerId': config['TUNEIN_PARTNERID'],
+                'partnerKey': config['TUNEIN_PARTNERKEY'],
+                'id': config['TUNEIN_STATIONID'],
+                'title': track['title'],
+                'artist': track['artist'],
+            }, timeout=config['REQUEST_TIMEOUT'])
+            r.raise_for_status()
+        except Exception as exc:
+            logger.warning("Update TuneIn failed: {0}".format(exc))
 
 
 def update_lastfm(track, timestamp):
