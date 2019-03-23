@@ -41,7 +41,7 @@ def update_stream(track):
 def update_tunein(track):
     if len(config['TUNEIN_PARTNERID']) > 0:
         try:
-            r = requests.get('http://air.radiotime.com/Playing.ashx', params={
+            r = requests.get('https://air.radiotime.com/Playing.ashx', params={
                 'partnerId': config['TUNEIN_PARTNERID'],
                 'partnerKey': config['TUNEIN_PARTNERKEY'],
                 'id': config['TUNEIN_STATIONID'],
