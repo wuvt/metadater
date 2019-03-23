@@ -1,5 +1,5 @@
 pylast==1.6.0
-python-dateutil==2.6.0
-requests==2.13.0
+python-dateutil==2.8.0
+requests==2.21.0
 sseclient==0.0.18
-six==1.10.0
+six==1.12.0
