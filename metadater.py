@@ -88,7 +88,7 @@ if __name__ == '__main__':
 
     logger = logging.getLogger(__name__)
 
-    messages = sseclient.SSEClient(config['LIVE_URL'], chunk_size=1)
+    messages = sseclient.SSEClient(config['LIVE_URL'], chunk_size=1024)
     for msg in messages:
         try:
             data = json.loads(msg.data)
