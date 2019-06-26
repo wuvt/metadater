@@ -108,5 +108,9 @@ if __name__ == '__main__':
                 track = data['tracklog']['track']
                 update_stream(track)
 
+            if len(config['HEALTHCHECK_WEBHOOK']) > 0:
+                r = requests.get(config['HEALTHCHECK_WEBHOOK'],
+                                 timeout=config['REQUEST_TIMEOUT'])
+
         except Exception as e:
             logger.warning("Failed to process message: {}".format(e))
