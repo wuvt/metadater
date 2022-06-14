@@ -106,7 +106,7 @@ func main() {
 						p := lastfm.P{
 							"album":  data.TrackLog.Track.Album,
 							"artist": data.TrackLog.Track.Artist,
-							"title":  data.TrackLog.Track.Title,
+							"track":  data.TrackLog.Track.Title,
 						}
 						_, err = api.Track.UpdateNowPlaying(p)
 						if err != nil {
