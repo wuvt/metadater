@@ -1,12 +1,18 @@
-FROM python:3.7
+FROM golang:1.18.3-alpine3.16 AS builder
 
-RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app/
+
+ADD go.mod go.sum /usr/src/app/
+ADD *.go /usr/src/app/
+RUN go build
+
+FROM alpine:3.16
+
 WORKDIR /usr/src/app
 
-COPY requirements.txt /usr/src/app/
-RUN pip install --no-cache-dir -r requirements.txt
+COPY --from=builder /usr/src/app/metadater /usr/local/bin/metadater
 
-COPY . /usr/src/app/
+VOLUME ["/etc/metadater"]
 
 USER nobody
-CMD ["python", "/usr/src/app/metadater.py"]
+CMD ["metadater"]
