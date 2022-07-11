@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"net"
 	"net/http"
 	"net/url"
 )
@@ -53,6 +54,22 @@ func sendGetWebhook(webhookUrl string, params map[string]string) error {
 	if resp.StatusCode != 200 {
 		return fmt.Errorf("Webhook returned a status code (%d) other than 200", resp.StatusCode)
 	}
+
+	return nil
+}
+
+func updateRds(host string, tracklog TrackLog) error {
+	// TODO: replace naughty words
+	// how to get radiotext value: {artist} - {title} [DJ: {dj}]
+	// prepend RT= to set raidotext over telnet
+
+	conn, err := net.Dial("tcp", host)
+	if err != nil {
+		return err
+	}
+	defer conn.Close()
+
+	fmt.Fprintf(conn, "RT=%s - %s [DJ: %s]\n", tracklog.Track.Artist, tracklog.Track.Title, tracklog.Dj)
 
 	return nil
 }

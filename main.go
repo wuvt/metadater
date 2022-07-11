@@ -80,6 +80,16 @@ func main() {
 					}
 				}()
 
+				// RDS
+				if len(config.RdsHost) > 0 {
+					go func() {
+						err := updateRds(config.RdsHost, data.TrackLog)
+						if err != nil {
+							log.Printf("Failed to update RDS: %s", err)
+						}
+					}()
+				}
+
 				// TuneIn
 				if len(config.TuneInPartnerId) > 0 && len(config.TuneInPartnerKey) > 0 && len(config.TuneInStationId) > 0 {
 					go func() {
@@ -134,6 +144,16 @@ func main() {
 						}
 					}
 				}()
+
+				// RDS
+				if len(config.RdsHost) > 0 {
+					go func() {
+						err := updateRds(config.RdsHost, data.TrackLog)
+						if err != nil {
+							log.Printf("Failed to update RDS: %s", err)
+						}
+					}()
+				}
 			}
 
 			if len(config.HealthCheckWebhook) > 0 {

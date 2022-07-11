@@ -11,6 +11,7 @@ type Config struct {
 	TuneInPartnerId    string   `json:"TUNEIN_PARTNERID"`
 	TuneInPartnerKey   string   `json:"TUNEIN_PARTNERKEY"`
 	TuneInStationId    string   `json:"TUNEIN_STATIONID"`
+	RdsHost            string   `json:"RDS_HOST"`
 	HealthCheckWebhook string   `json:"HEALTHCHECK_WEBHOOK"`
 }
 
